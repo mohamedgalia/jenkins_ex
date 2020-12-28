@@ -1,0 +1,19 @@
+pipeline {
+	agent any
+	stages {
+		stage('Build') {
+            steps {
+                copyArtifacts filter: '**/*.war', fingerprintArtifacts: true, projectName: 'run-test-pipline', selector: lastSuccessful()
+		 }
+
+		 post {
+		    success {
+			deploy adapters: [tomcat9(credentialsId: '848d04d0-e252-4f9a-9bcf-9a9116a5ec1b', path: '', url: 'http://54.93.100.69:8080/')], contextPath: null, war: '**/*.war'
+		    }
+
+		 }
+
+		}
+
+	}
+}
